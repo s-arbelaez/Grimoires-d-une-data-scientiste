@@ -1,0 +1,5 @@
+# Copy this file to .dev.vars for local Worker development.
+# Never use these placeholders in a deployed environment.
+ADMIN_USERNAME=change-me
+ADMIN_PASSWORD=replace-with-a-long-random-password
+COOKIE_SECURE=false

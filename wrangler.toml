@@ -1,0 +1,22 @@
+name = "the-cyber-grimoire"
+main = "src/worker/index.ts"
+compatibility_date = "2025-02-14"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "the-cyber-grimoire"
+database_id = "00000000-0000-4000-8000-000000000001"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "the-cyber-grimoire-media"
+
+[vars]
+COOKIE_SECURE = "true"
