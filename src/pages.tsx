@@ -1,10 +1,9 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { ArrowDownRight, ArrowRight, Bookmark, BookmarkCheck, Headphones, Search, Shuffle, Sparkles } from "lucide-react";
+import { ArrowRight, Bookmark, BookmarkCheck, Headphones, Search, Shuffle, Sparkles } from "lucide-react";
 import { api } from "./api";
 import { useMusic } from "./App";
 import { CategoryChips, Ornament, PostCard, RelatedEntries, SectionHeading } from "./components";
-import { BatIllustration, CathedralArch, RoseIllustration } from "./illustrations";
 import type { Category, Post, PostBlock, PostListData, PostPageData, Track } from "./types";
 const BlockRenderer = lazy(() => import("./blocks").then((module) => ({ default: module.BlockRenderer })));
 
@@ -27,23 +26,6 @@ function usePosts(path: string) {
   return { data, error };
 }
 
-function RoseBloom() {
-  const [fallingPetals, setFallingPetals] = useState<number[]>([]);
-  const [nextPetal, setNextPetal] = useState(0);
-  const releasePetal = () => {
-    const petal = nextPetal;
-    setNextPetal((value) => value + 1);
-    setFallingPetals((current) => [...current, petal]);
-    window.setTimeout(() => setFallingPetals((current) => current.filter((value) => value !== petal)), 2400);
-  };
-  return <div className="rose-bloom">
-    <button className="rose-trigger" aria-label="Release a rose petal" title="Let a petal fall" onClick={releasePetal}>
-      <RoseIllustration className="rose-engraving" />
-    </button>
-    {fallingPetals.map((petal) => <span className="falling-petal" key={petal} style={{ "--petal-offset": `${(petal % 5) * 9 - 18}px`, "--petal-delay": `${(petal % 4) * .06}s` } as React.CSSProperties} aria-hidden="true" />)}
-  </div>;
-}
-
 export function HomePage() {
   const categories = useCategories();
   const { data } = usePosts("/posts?limit=6&sort=featured");
@@ -60,26 +42,20 @@ export function HomePage() {
       if (settings.site_title) setSiteTitle(settings.site_title);
     }).catch(() => undefined);
   }, []);
-  const words = siteTitle.split(/\s+/).filter(Boolean);
-  const firstLine = words.slice(0, 2).join(" ");
-  const secondLine = words.slice(2).join(" ");
   return <div className="home-page">
-    <section className="hero-section">
-      <div className="hero-topline"><span>Field notes from the edge of the known</span><span className="hero-date">An ever-growing personal archive&nbsp; · &nbsp;Est. 2025</span></div>
+    <section className="hero-section simple-hero">
+      <div className="hero-topline"><span>A personal archive of the curious</span><span className="hero-date">Ideas · experiments · music · mathematics</span></div>
       <div className="hero-art">
-        <CathedralArch />
-        <div className="moon-orbit"><span className="moon">☾</span><span className="orbit-note">NOCTURNE · I</span></div>
-        <div className="hero-title-wrap"><span className="hero-pretitle">Welcome to</span><h1><span>{firstLine}</span><em>{secondLine || firstLine}</em></h1><span className="hero-subtitle">A digital commonplace book for a mind in motion.</span></div>
-        <BatIllustration className="hero-bat" />
-        <div className="hero-stamp"><span>FIELD NOTES</span><strong>01 — ∞</strong><span>Kept by curiosity</span></div>
-        <RoseBloom />
-        <div className="hero-vertical-note">DATA · SYSTEMS · ART · OTHERWISE</div>
+        <div className="hero-title-wrap">
+          <span className="hero-pretitle">Welcome to</span>
+          <h1>{siteTitle}</h1>
+          <span className="hero-subtitle">A digital commonplace book for a mind in motion.</span>
+          <Link className="hero-primary-link" to="/archive">Explore the archive <ArrowRight size={16} /></Link>
+        </div>
       </div>
-      <div className="hero-bottomline"><p>A private little world for <em>ideas, experiments, music, mathematics, and the beautiful in-between.</em></p><Link className="hero-scroll" to="/archive"><span>Enter the archive</span><ArrowDownRight size={17} /></Link></div>
     </section>
 
     <section className="intro-strip">
-      <div className="intro-mark"><Ornament>✣</Ornament></div>
       <p>Not a portfolio. Not a feed. Just a <em>living grimoire</em>—a place to collect the things I learn, make, question, and love.</p>
       <button className="text-link" onClick={discoverRandom}><Shuffle size={14} /> Open a random page</button>
     </section>

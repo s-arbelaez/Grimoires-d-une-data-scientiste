@@ -11,7 +11,7 @@ not_found_handling = "single-page-application"
 [[d1_databases]]
 binding = "DB"
 database_name = "the-cyber-grimoire"
-database_id = "00000000-0000-4000-8000-000000000001"
+database_id = "b400061c-084f-4f40-b0cc-9e27d5d287f4"
 migrations_dir = "migrations"
 
 [[r2_buckets]]

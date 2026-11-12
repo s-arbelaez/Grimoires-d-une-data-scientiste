@@ -1,6 +1,6 @@
 # The Cyber Grimoire
 
-A personal English-language publishing archive, built with React, TypeScript, a Cloudflare Worker/Hono API, D1, and R2. The public experience is an editorial gothic archive; the private dashboard supports a single administrator, draft and publishing workflows, editable block templates, and protected media uploads.
+A personal English-language publishing archive, built with React, TypeScript, a Cloudflare Worker/Hono API, D1, and R2. The public experience is a restrained, typography-led archive in deep purple; the private dashboard supports a single administrator, draft and publishing workflows, editable block templates, and protected media uploads.
 
 The private input materials remain in `md data for AI (not posting on github)/`. That directory is ignored by Git and is not referenced or copied into the app or its production assets. Keep the originals in place; do not commit them.
 
@@ -105,7 +105,7 @@ npm run db:remote
 
 ## Product and editor
 
-- The public visual system uses a restrained aubergine-and-vellum palette, a perspective nave with tracery and lace, articulated engraved bat and botanical illustrations, book-like archive cards, and bookmark-cord navigation on mobile. Ambient interactions respect reduced-motion preferences.
+- The public visual system uses a restrained deep-purple palette, editorial serif typography, and simple surfaces, with subtle twinkling stars, a soft cursor glow, a rotating record, and pull-cord mobile navigation. Publishing, archive, search, music, and admin interactions remain independent of presentation.
 - `/` home, `/archive`, `/category/:slug`, `/tag/:slug`, `/post/:slug`, `/music`, and `/about`
 - `/admin` single-owner login and dashboard, with post editing, categories, site identity, and media library
 - The canvas editor supports editable starter templates, text/Markdown, quotes, image/gallery, audio, MP4, PDF, code, LaTeX, callouts, dividers, tables, generated contents lists, spacers, reordering, duplication, deletion, layout choices, preview modes, drafts, publishing, and unpublishing.

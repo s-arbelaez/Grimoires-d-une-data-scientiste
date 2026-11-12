@@ -9,8 +9,9 @@
 | `npm audit` | Passed | Zero known dependency vulnerabilities reported. |
 | `npm run db:local` | Passed | Local D1 migration applied; rerunning reports no pending migration. |
 | `npx wrangler deploy --dry-run` | Passed | Worker packaged with D1, R2, Assets, and `COOKIE_SECURE` bindings; no deployment performed. |
-| Browser smoke check | Passed | Public home page and admin sign-in/dashboard rendered locally; responsive visual review prompted a hero layout adjustment. |
-| Art direction and interaction check | Passed | Reviewed the traced nave, articulated bat wings, and lace framing; at 375px there was no horizontal overflow or hero-content collision; the pull-cord opened all navigation links; cursor aura has no center dot; rose-petal release and page-specific hidden notes work. The API-backed archive needs the local Worker, which was not running during this visual-only check. |
+| Browser smoke check | Passed | Public home page rendered locally at desktop and mobile widths; the hero uses a simple typographic layout with subtle stars and cursor glow. |
+| Responsive navigation check | Passed | At 375px, the pull-cord opened the existing navigation links and closed correctly; no horizontal overflow was observed. |
+| Listening room motion check | Passed | The vinyl rotates slowly with a moving highlight and counter-rotating music note; reduced-motion preferences disable ambient movement. |
 | Local Worker API checks | Passed | Authentication, unauthorized access rejection, draft privacy, publishing, combined search/filtering, settings, sitemap, and robots routes were exercised. |
 | Media and playlist checks | Passed | Invalid file signatures were rejected; published image access and revocation on unpublish, audio playlist visibility, playlist management, default-playlist protection, and cross-origin mutation rejection were exercised. |
 
@@ -18,6 +19,7 @@
 
 - Production deployment and remote D1/R2 behavior were not tested because they require the owner's Cloudflare account and resources.
 - The local API and browser checks are manual integration/smoke checks; the repository does not yet include an automated test suite.
+- The latest browser visual check did not run with the local Worker, so API-backed archive content was not available during that check.
 - Audio was verified through upload and playlist visibility, not through an end-to-end audible playback test across browsers.
 - The media workflow supports the documented file types and size limit, but does not yet provide advanced image optimization or rich per-asset metadata.
 - `wrangler deploy --dry-run` validates packaging and bindings only; it does not provision Cloudflare resources or verify production secrets.

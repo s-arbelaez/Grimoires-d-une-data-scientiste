@@ -1,10 +1,9 @@
 import { createContext, lazy, Suspense, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Link, NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { ArrowUp, Moon, Search } from "lucide-react";
+import { ArrowUp, Search } from "lucide-react";
 import { api } from "./api";
 import { Ornament, PlayerBar } from "./components";
 import { AboutPage, ArchivePage, CategoryPage, HomePage, MusicPage, PostPage, SearchOverlay, TagPage } from "./pages";
-import { BatIllustration } from "./illustrations";
 import type { Track } from "./types";
 const AdminApp = lazy(() => import("./admin"));
 
@@ -13,18 +12,11 @@ const MusicContext = createContext<MusicContextValue>({ current: null, playTrack
 export const useMusic = () => useContext(MusicContext);
 
 const starPositions = [
-  [9, 21, 0], [27, 71, 2.4], [48, 17, 1.2], [69, 82, 3.6], [87, 32, .7],
-  [94, 63, 4.1],
+  [9, 21, 0], [27, 71, 2.4], [48, 17, 1.2], [69, 82, 3.6], [87, 32, .7], [94, 63, 4.1],
 ];
 
-function BatFlight({ className = "", style }: { className?: string; style?: React.CSSProperties }) {
-  return <BatIllustration className={`bat-flight ${className}`} style={style} />;
-}
-
-function SkyDecor({ pathname }: { pathname: string }) {
+function AmbientAtmosphere() {
   const auraRef = useRef<HTMLDivElement>(null);
-  const [bat, setBat] = useState<{ id: number; top: number; reverse: boolean } | null>(null);
-  const [secretOpen, setSecretOpen] = useState(false);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -45,41 +37,12 @@ function SkyDecor({ pathname }: { pathname: string }) {
     };
   }, []);
 
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let id = 0;
-    let expiry: number | undefined;
-    const interval = window.setInterval(() => {
-      id += 1;
-      setBat({ id, top: 12 + Math.random() * 43, reverse: Math.random() > .5 });
-      if (expiry) window.clearTimeout(expiry);
-      expiry = window.setTimeout(() => setBat(null), 9200);
-    }, 23000);
-    return () => {
-      window.clearInterval(interval);
-      if (expiry) window.clearTimeout(expiry);
-    };
-  }, []);
-
-  useEffect(() => setSecretOpen(false), [pathname]);
-
-  const secret = pathname === "/" ? "The first star is always a little late." :
-    pathname.startsWith("/post/") ? "Some pages keep a little moonlight between their lines." :
-      pathname.startsWith("/category/") ? "Every room has a door that only opens from within." :
-        pathname.startsWith("/tag/") ? "A thread can lead you back to yourself." :
-          pathname.startsWith("/music") ? "Turn the record; the night turns with it." :
-            pathname.startsWith("/about") ? "The keeper left a small mark in the margin." :
-              "The archive remembers what the shelves forget.";
-
   return <>
-    <div className="star-field" aria-hidden="true">{starPositions.map(([left, top, delay], index) =>
-      <span key={index} style={{ left: `${left}%`, top: `${top}%`, animationDelay: `${delay}s` }}>✦</span>)}</div>
-    <div className="cursor-aura" ref={auraRef} aria-hidden="true" />
-    {bat && <BatFlight key={bat.id} style={{ top: `${bat.top}%`, animationDirection: bat.reverse ? "reverse" : "normal" }} />}
-    <div className="secret-hiding-place">
-      {secretOpen && <span className="secret-note" role="status">{secret}</span>}
-      <button className="secret-key" aria-label={secretOpen ? "Close the hidden note" : "Find a hidden note"} title="A small secret" onClick={() => setSecretOpen((open) => !open)}><Moon size={16} /></button>
+    <div className="star-field" aria-hidden="true">
+      {starPositions.map(([left, top, delay], index) =>
+        <span key={index} style={{ left: `${left}%`, top: `${top}%`, animationDelay: `${delay}s` }}>✦</span>)}
     </div>
+    <div className="cursor-aura" ref={auraRef} aria-hidden="true" />
   </>;
 }
 
@@ -93,7 +56,6 @@ function SiteFrame() {
   const [scroll, setScroll] = useState(0);
   const [siteTitle, setSiteTitle] = useState("The Cyber Grimoire");
   const [secondaryTitle, setSecondaryTitle] = useState("Grimoires d'une Data Scientiste");
-  const siteShellRef = useRef<HTMLDivElement>(null);
 
   const playTrack = useCallback((track: Track) => {
     const audio = document.querySelector<HTMLAudioElement>("#persistent-audio");
@@ -136,7 +98,6 @@ function SiteFrame() {
   useEffect(() => {
     const listener = () => {
       setScroll(window.scrollY);
-      siteShellRef.current?.style.setProperty("--moon-shift", `${Math.min(window.scrollY * .035, 28)}px`);
     };
     window.addEventListener("scroll", listener, { passive: true });
     return () => window.removeEventListener("scroll", listener);
@@ -153,12 +114,13 @@ function SiteFrame() {
   }, []);
 
   return <MusicContext.Provider value={{ current, playTrack }}>
-    <div className="site-shell" ref={siteShellRef}>
-      {!location.pathname.startsWith("/admin") && <SkyDecor pathname={location.pathname} />}
+    <div className="site-shell">
+      {!location.pathname.startsWith("/admin") && <AmbientAtmosphere />}
       <header className="site-header">
         <Link className="brand-lockup" to="/" aria-label={`${siteTitle} home`}><span className="brand-mark">C</span><span><strong>{siteTitle}</strong><small>A personal archive of the curious</small></span></Link>
-        <button className={`menu-toggle${menuOpen ? " is-pulled" : ""}`} onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? "Close menu" : "Pull to open menu"} aria-expanded={menuOpen}>
-          <span className="menu-cord" aria-hidden="true"><i /><b /></span><span className="sr-only">{menuOpen ? "Close menu" : "Pull to open menu"}</span>
+        <button className={`menu-toggle${menuOpen ? " is-pulled" : ""}`} onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen}>
+          <span className="menu-cord" aria-hidden="true"><i /><b /></span>
+          <span className="sr-only">{menuOpen ? "Close menu" : "Pull to open menu"}</span>
         </button>
         <nav className={`main-nav${menuOpen ? " is-open" : ""}`} aria-label="Main navigation">
           <NavLink to="/archive">The Archive</NavLink><NavLink to="/music">Listening Room</NavLink><NavLink to="/about">About</NavLink>
